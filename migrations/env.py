@@ -2,7 +2,7 @@ from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
-from quiz_app.database import metadata
+from database.models import metadata
 from alembic import context
 
 from config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER
