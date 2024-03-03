@@ -26,6 +26,26 @@ def add_question_list(db: Session, question_list: schemas.question_list, quiz_id
         db.flush()
         add_answer_list(db=db, answer_list=question.answers_list, question_id=db_question.id)
 
+def add_question(db: Session, question: schemas.question, quiz_id: str):
+    db_question = models.Question(
+        quiz_id=quiz_id,
+        question_text=question.question_text,
+        points = question.points,
+        right_answer = question.right_answer,
+        pcl = question.pcl
+        )
+    db.add(db_question)
+    db.flush()
+    add_answer_list(db=db, answer_list=question.answers_list, question_id=db_question.id)
+    db.commit()
+
+def add_answer(db: Session, answer: schemas.answer, question_id: str):
+    db_answer = models.Answer(
+        question_id=question_id,
+        answer_text=answer.answer_text
+        )
+    db.add(db_answer)
+    db.commit()
 
 def add_quiz(db:Session, quiz: schemas.quiz, questions: schemas.question_list):
     quiz_db = models.Quiz(

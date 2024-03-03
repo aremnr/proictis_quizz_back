@@ -22,7 +22,7 @@ class question(BaseModel):
     points: int
     right_answer: int | None
     pcl: int | None
-    answers_list: answer_list = []
+    answers_list: answer_list
 
 class question_list(BaseModel):
     list: list[question]
