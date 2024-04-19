@@ -2,18 +2,20 @@ from pydantic import BaseModel, ConfigDict
 import uuid
 
 
-class answer(BaseModel):
+class Answer(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: str | uuid.UUID
     question_id: str | uuid.UUID
     answer_text: str
 
-class answer_list(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-    list: list[answer]
 
-class question(BaseModel):
+class AnswerList(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    list: list[Answer]
+
+
+class Question(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: str | uuid.UUID
@@ -22,15 +24,16 @@ class question(BaseModel):
     points: int
     right_answer: int | None
     pcl: int | None
-    answers_list: answer_list
+    answers_list: AnswerList
 
-class question_list(BaseModel):
-    list: list[question]
 
-class quiz(BaseModel):
+class QuestionList(BaseModel):
+    list: list[Question]
+
+
+class Quiz(BaseModel):
     model_config = ConfigDict(from_attributes=True)
-    
-    
+
     id: str | uuid.UUID
     name: str
     dis: str | None
@@ -39,6 +42,20 @@ class quiz(BaseModel):
     all_points: int
     
     
-class input_model(BaseModel):
-    quiz: quiz
-    qestions: question_list
+class InputModel(BaseModel):
+    quiz: Quiz
+    questions: QuestionList
+
+
+class RdQuestion(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: str | uuid.UUID
+    quiz_id: str | uuid.UUID
+    question_text: str
+    points: int
+    right_answer: int
+    pcl: int
+
+
+class Check(BaseModel):
+    is_right: bool
