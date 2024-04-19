@@ -94,7 +94,7 @@ def get_question(db: Session, quiz_id: str, pcl: int):
             quiz_id=question.quiz_id,
             question_text=question.question_text,
             points=question.points,
-            right_answer=question.right_answer,
+            right_answer=-1,
             pcl=question.pcl,
             answers_list=answers
         )
