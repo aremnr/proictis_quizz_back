@@ -158,5 +158,10 @@ docker run -p 5432:5432 --name pg_trading -e POSTGRES_USER=postgres -e POSTGRES_
 
 Приложение: <br>
 ```bash
-docker build . --tag quiz_app && docker run -p 80:8081 quiz_app 
+docker build . --tag quiz_app && docker run -p 81:8081 quiz_app 
+```
+
+Redis: <br>
+```bash
+docker run -d --name redis-server -p 6379:6379 redis/redis-stack-server:latest
 ```
