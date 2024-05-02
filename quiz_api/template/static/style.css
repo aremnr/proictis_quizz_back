@@ -1,0 +1,51 @@
+h1,h2,h3,h4,h5,h6{
+    margin: 0; padding: 0;
+}
+
+html{
+    height: 100%;
+    width: 100%;
+}
+
+body{
+    margin: 0 auto;
+    background: rgb(186,126,196);
+    background: linear-gradient(90deg, rgba(186,126,196,1) 25%, rgba(172,49,171,1) 53%, rgba(170,38,190,0.6839110644257703) 79%, rgba(218,0,255,1) 100%);
+}
+
+.main{
+    font-family: "Open Sans", sans-serif;
+    text-align: center;
+    width: 860px;
+    height: 1864px;
+    margin: 0 auto;
+    background-image: url("img/backround.jpg");
+    display: block;
+}
+
+#quiz_name{
+    font-size: 60pt;
+    position: relative;
+    top: 300px;
+}
+
+#question{
+    font-size: 50pt;
+    position: relative;
+    top: 400px;
+}
+
+.answer_block{
+    font-size: 25pt;
+    position: relative;
+    top: 800px;
+}
+
+.answer{
+    margin: 20px 100px;
+    border-radius: 12px;
+    padding: 10px;
+    background: rgb(186,126,196);
+    background: linear-gradient(90deg, rgba(186,126,196,1) 25%, rgba(172,49,171,1) 53%, rgba(170,38,190,0.6839110644257703) 79%, rgba(218,0,255,1) 100%);
+}
+
