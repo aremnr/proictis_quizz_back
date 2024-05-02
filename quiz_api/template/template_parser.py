@@ -16,4 +16,3 @@ def get_html_response(request: Request, quiz_id: str, db,  pcl: int = 1):
         "answer_3": question.answers_list.list[2].answer_text,
         "answer_4": question.answers_list.list[3].answer_text
     })
-
