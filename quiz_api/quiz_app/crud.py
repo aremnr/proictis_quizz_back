@@ -94,11 +94,12 @@ def get_question(db: Session, quiz_id: str, pcl: int):
             quiz_id=question.quiz_id,
             question_text=question.question_text,
             points=question.points,
-            right_answer=-1,
+            right_answer=question.right_answer,
             pcl=question.pcl,
             answers_list=answers
         )
         cache.add_to_cache(question=question)
+        question.right_answer = -1
         return question
 
 
@@ -137,4 +138,7 @@ def check_answer(db: Session, quiz_id: str, pcl: int, answer_plc: int):
             db.query(models.QuestionModel).filter(models.QuestionModel.quiz_id == quiz_id)
             .filter(models.QuestionModel.pcl == pcl)
             .one()).right_answer
+
+    print(right_answer)
+    print(answer_plc)
     return schemas.Check(is_right=(right_answer == answer_plc))

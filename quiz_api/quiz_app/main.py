@@ -62,9 +62,9 @@ def delete_answer(*, answer_id: str, db: Session = Depends(get_db)):
     return crud.delete_answer(answer_id=answer_id, db=db)
 
 
-@app.post("/quiz/{quiz_id}/ans_check", response_model=schemas.Check)
+@app.get("/quiz/{quiz_id}/ans_check", response_model=schemas.Check)
 def check_answer(quiz_id: str, *, question_number: int = 1, answer_number: int = 0, db: Session = Depends(get_db)):
-    return crud.check_answer(db, quiz_id, question_number, answer_number)
+    return crud.check_answer(db=db, quiz_id=quiz_id, pcl=question_number, answer_plc=answer_number)
 
 
 app.mount("/static", StaticFiles(directory="template/static"), name="static")

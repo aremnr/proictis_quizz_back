@@ -10,6 +10,7 @@ def get_html_response(request: Request, quiz_id: str, db,  pcl: int = 1):
     question: schemas.Question = crud.get_question(quiz_id=quiz_id, db=db, pcl=pcl)
     return templates.TemplateResponse(request=request, name="index.html", context={
         "quiz_name": quiz.name,
+        "quiz_dis": quiz.dis,
         "question": question.question_text,
         "answer_1": question.answers_list.list[0].answer_text,
         "answer_2": question.answers_list.list[1].answer_text,

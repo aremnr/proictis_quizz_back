@@ -1,25 +1,23 @@
 <!DOCTYPE html>
-<html lang="ru, en">
-    <head>
-        <title>Item Details</title>
-        <link href="{{ url_for('static', path='/style.css') }}" rel="stylesheet">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@1,300&display=swap" rel="stylesheet">
-    </head>
-    <body>
-        <div class="main">
-            <h1 id="quiz_name"> {{ quiz_name }} </h1>
-            <span id="question">{{ question }}</span>
-            <div class="answer_block">
-                <span class="answer">{{ answer_1 }} </span>
-                <span class="answer">{{ answer_2 }}</span>
-            </div>
-            <br><br>
-            <div class="answer_block">
-                <span class="answer">{{ answer_3 }} </span>
-                <span class="answer">{{ answer_4 }}</span>
-            </div>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ url_for('static', path='/style.css') }}" rel="stylesheet">
+    <title>test</title>
+</head>
+<body>
+    <div class="field">
+        <p class="namequiz">{{ quiz_name }}</p>
+        <p class="quiz_dis"> Описание: <br> {{ quiz_dis }}</p>
+        <p class="namequiz" style="top: 140px">{{ question }}</p>
+        <div class="answers">
+            <button class="answer" id="a1">{{ answer_1 }}</button>
+            <button class="answer" id="a2">{{ answer_2 }}</button>
+            <button class="answer" id="a3">{{ answer_3 }}</button>
+            <button class="answer" id="a4">{{ answer_4 }}</button>
         </div>
-    </body>
+        
+    </div>
+</body>
 </html>
