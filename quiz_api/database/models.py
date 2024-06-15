@@ -38,3 +38,4 @@ class AnswerModel(Base):
     question_id: Mapped[str] = mapped_column(UUID, ForeignKey("questions.id", ondelete="CASCADE"))
     answer_text: Mapped[str]
     question = relationship("QuestionModel", back_populates="answers")
+

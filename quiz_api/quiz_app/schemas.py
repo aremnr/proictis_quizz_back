@@ -59,3 +59,23 @@ class RdQuestion(BaseModel):
 
 class Check(BaseModel):
     is_right: bool
+
+
+class Admin(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: str | uuid.UUID
+    username: str | None
+    email: str | None
+    password: str | None
+    is_admin: bool = True
+
+
+class User(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    username: str | None
+
+
+class AdminValidate(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    #JWT: str | None
+    is_admin: bool

@@ -63,6 +63,7 @@ def add_quiz(db: Session, quiz: schemas.Quiz, questions: schemas.QuestionList):
     )
     db.add(quiz_db)
     db.flush()
+    print(quiz_db.id)
     add_question_list(db, questions, quiz_db.id)
     db.commit()
 
@@ -98,8 +99,8 @@ def get_question(db: Session, quiz_id: str, pcl: int):
             pcl=question.pcl,
             answers_list=answers
         )
-        cache.add_to_cache(question=question)
         question.right_answer = -1
+        cache.add_to_cache(question=question)
         return question
 
 
@@ -131,14 +132,14 @@ def delete_answer(db: Session, answer_id: str):
 
 
 def check_answer(db: Session, quiz_id: str, pcl: int, answer_plc: int):
-    try:
-        right_answer: int = cache.check_in_cache(quiz_id=quiz_id, pcl=pcl).right_answer
-    except KeyError:
-        right_answer: int = (
-            db.query(models.QuestionModel).filter(models.QuestionModel.quiz_id == quiz_id)
-            .filter(models.QuestionModel.pcl == pcl)
-            .one()).right_answer
-
-    print(right_answer)
-    print(answer_plc)
+    right_answer: int = (
+        db.query(models.QuestionModel).filter(models.QuestionModel.quiz_id == quiz_id)
+        .filter(models.QuestionModel.pcl == pcl)
+        .one()).right_answer
     return schemas.Check(is_right=(right_answer == answer_plc))
+
+
+def get_right_answer(db: Session, quiz_id: str, pcl: int):
+    question = db.query(models.QuestionModel).filter(models.QuestionModel.quiz_id == quiz_id).filter(
+        models.QuestionModel.pcl == pcl).one()
+    return str(question.answers[question.right_answer-1].answer_text)

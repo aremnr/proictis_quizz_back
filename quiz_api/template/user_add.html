@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ url_for('static', path='/style.css') }}" rel="stylesheet">
+    <title>Title</title>
+</head>
+<body>
+    <div class="field">
+        <label for="username"><input type="text" id="username" name="username"></label>
+        <button type="submit">Send</button>
+        <div id="response"></div>
+    </div>
+<script src="{{ url_for('static', path='/user_add.js') }}"></script>
+</body>
+</html>
