@@ -28,7 +28,6 @@ document.addEventListener('click', function(event) {
                 const headers = {"type": "check_answer"};
                 index++;
                 ws.send(JSON.stringify({headers, index}));
-                console.log(JSON.stringify({headers, index}))
             }
         });
     }

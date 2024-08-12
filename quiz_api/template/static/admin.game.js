@@ -1,6 +1,4 @@
-const pathname = window.location.pathname;
-const segments = pathname.split('/');
-const game_id = segments.pop() || segments.pop();
+const game_id = localStorage.getItem("gameId")
 const ws = new WebSocket(`ws://localhost:9090/game/${game_id}`)
 ws.onopen = function(event) {
     console.log('WebSocket is open now.');
@@ -60,19 +58,19 @@ document.addEventListener('click', function(event) {
                 const el = document.getElementById('answer_line');
                 el.remove()
             }
-            const headers = {"type": "game", "JWT": "1"};
+            const headers = {"type": "game"};
             ws.send(JSON.stringify({headers}));
             const button = document.getElementById('button');
             button.setAttribute("class", "answer");
             button.setAttribute("style", "width: 400px; margin-left: 10px");
             button.textContent = 'Show Right Answer';
         } else if (message === "Show Right Answer"){
-            const headers = {"type": "get_answer", "JWT": "1"};
+            const headers = {"type": "get_answer"};
             const button = document.getElementById('button');
             button.textContent = 'Next';
             ws.send(JSON.stringify({headers}));
         } else if (message === "END GAME"){
-            const headers = {"type": "end_game", "JWT": "1"};
+            const headers = {"type": "end_game"};
             ws.send(JSON.stringify({headers}));
         }
 

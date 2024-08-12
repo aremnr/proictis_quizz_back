@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Profile</title>
+    <script type="module" src="{{ url_for('static', path='/QRCreator.js') }}"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .button {
+            display: block;
+            margin: 10px 0;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .hidden {
+            display: none;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+        }
+        .link-button {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+        }
+        .link-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin Profile</h1>
+
+    <button id="create-referral-btn" class="button">Create Referral</button>
+    <div id="referral-result" class="result hidden"></div>
+
+    <button id="create-game-btn" class="button">Create Game</button>
+    <div id="game-form" class="hidden">
+        <input type="text" id="quiz-id-input" placeholder="Enter Quiz ID">
+        <button id="submit-game-btn" class="button">Submit</button>
+    </div>
+    <div id="game-result" class="result hidden">
+        <button class="hidden button" id="go-to-admin-page-btn">Go to Game</button>
+        <div class="hidden" id="qrcode"></div>
+    </div>
+
+    <script>
+        document.getElementById('create-referral-btn').addEventListener('click', function() {
+            const token = localStorage.getItem('authToken');
+            fetch('/create_referral', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const referralResult = document.getElementById('referral-result');
+                referralResult.textContent = `Referral: ${data.referral}`;
+                referralResult.classList.remove('hidden');
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+        document.getElementById('create-game-btn').addEventListener('click', function() {
+            const gameForm = document.getElementById('game-form');
+            gameForm.classList.remove('hidden');
+        });
+
+        document.getElementById('submit-game-btn').addEventListener('click', function() {
+            const quizId = document.getElementById('quiz-id-input').value;
+            const token = localStorage.getItem('authToken');
+            fetch(`/create_game?quiz_id=${quizId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const gameResult = document.getElementById('game-result');
+                const gameButton = document.getElementById("go-to-admin-page-btn");
+                const qrcode = document.getElementById("qrcode");
+                gameButton.classList.remove('hidden')
+                gameResult.classList.remove('hidden')
+                qrcode.classList.remove('hidden')
+                qrcode.append(QRCreator(`http://${window.location.host}/user_add/${data.game_id}`).result);
+                localStorage.setItem('gameId', `${data.game_id}`)
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+        document.getElementById('go-to-admin-page-btn').addEventListener('click', function () {
+            game_id = localStorage.getItem('gameId')
+
+            token = localStorage.getItem('authToken')
+            fetch(`/admin_game/${game_id}`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.text();
+                        }
+                        throw new Error('Network response was not ok.');
+                    })
+                    .then(html => {
+                        // Assuming you want to replace the current page with the response
+                        document.open();
+                        document.write(html);
+                        document.close();
+                    })
+                    .catch(error => {
+                        console.error('Fetch operation failed: ', error);
+                    });
+            
+        })
+    </script>
+</body>
+</html>

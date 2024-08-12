@@ -57,3 +57,9 @@ class Game:
     async def send_admins(self, message: dict):
         for admin in self.admins.keys():
             await admin.send_json(message)
+
+    def check_admin(self, websocket: WebSocket):
+        if self.admins[websocket]:
+            return True
+        else:
+            return False

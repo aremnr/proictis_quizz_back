@@ -71,3 +71,15 @@ class RedisCache:
             answers_list=answers
         )
         return result
+
+    def add_cache(self, *, key: str, text: str, time: int = -1):
+        self.redis_client.set(key, text)
+        self.redis_client.expire(key, time)
+        return True
+
+    def check_cache(self, *, key: str):
+        try:
+            value = self.redis_client.get(key)
+            return value
+        except (...):
+            return False
