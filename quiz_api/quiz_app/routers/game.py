@@ -9,6 +9,7 @@ from admin_side.admin_func import get_current_admin
 from template.template_parser import get_game_html, get_admin_html
 from fastapi.websockets import WebSocket, WebSocketDisconnect
 from fastapi import Request
+from fastapi.exceptions import HTTPException
 from quiz_app.websocket_class import Game
 from typing import Annotated
 
@@ -30,25 +31,26 @@ async def get_game(game_id: str, username: str, request: Request):
 
 
 @router.get("/admin_game/{game_id}", tags=["game"])
-async def get_game(game_id: str, admin: Annotated[AdminSchema, Depends(get_current_admin)], request: Request):
+async def get_admin_game(game_id: str, admin: Annotated[AdminSchema, Depends(get_current_admin)], request: Request):
     return get_admin_html(request=request)
 
 
 @router.websocket('/game/{game_id}')
 async def game(websocket: WebSocket, game_id: str, db: Session = Depends(get_db)):
 
-    print(type(game_id), game_id, games)
+
     game = games[game_id]
     await game.manager.connect(websocket)
     username: str = await websocket.receive_text()
     players = game.get_players()
     for player in players:
         await websocket.send_json({"header" : "users", "username" : player, "points": 0})
-    if username != "admin":
+    try:
+        admin: AdminSchema = await get_current_admin(username, db=db)
+        game.add_admin(websocket=websocket, username=admin.username)
+    except HTTPException:
         await game.add_player(websocket=websocket, username=username)
-        await game.manager.JSON_broadcast({"header" : "users", "username" : username, "points": 0})
-    else:
-        game.add_admin(websocket=websocket, username=username)
+        await game.manager.JSON_broadcast({"header": "users", "username": username, "points": 0})
     try:
         while True:
             data = await websocket.receive_text()

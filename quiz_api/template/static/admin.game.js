@@ -2,7 +2,7 @@ const game_id = localStorage.getItem("gameId")
 const ws = new WebSocket(`ws://localhost:9090/game/${game_id}`)
 ws.onopen = function(event) {
     console.log('WebSocket is open now.');
-    ws.send('admin')
+    ws.send(`${localStorage.getItem('authToken')}`)
 };
 
 function isJSON(str) {
