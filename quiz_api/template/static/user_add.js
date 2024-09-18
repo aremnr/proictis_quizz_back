@@ -10,7 +10,7 @@ function redirect(url) {
 document.addEventListener('click', function(event) {
     if (event.target.tagName === 'BUTTON') {
         const username = document.getElementById('username').value;
-        const url = `http://localhost:9090/game/${game_id}?username=${username}`;
+        const url = `http://${window.location.host}/game/${game_id}?username=${username}`;
         redirect(url);
     }
 });
