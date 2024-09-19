@@ -53,3 +53,8 @@ def delete_answer(*, answer_id: str, admin: Annotated[AdminSchema, Depends(get_c
 @router.get("/quiz/{quiz_id}/ans_check", response_model=schemas.Check, tags=["quiz"])
 def check_answer(quiz_id: str, admin: Annotated[AdminSchema, Depends(get_current_admin)], *, question_number: int = 1, answer_number: int = 0, db: Session = Depends(get_db)):
     return crud.check_answer(db=db, quiz_id=quiz_id, pcl=question_number, answer_plc=answer_number)
+
+
+@router.get("/temp")
+def get_all_quizzes_by_owner_id(admin: Annotated[AdminSchema, Depends(get_current_admin)], db: Session = Depends(get_db)):
+    return {"quizzes": crud.get_quiz_by_own_id(db=db, owner_id=str(admin.id))}

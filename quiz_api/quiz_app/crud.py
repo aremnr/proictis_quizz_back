@@ -155,3 +155,8 @@ def get_right_answer(db: Session, quiz_id: str, pcl: int):
     question = db.query(models.QuestionModel).filter(models.QuestionModel.quiz_id == quiz_id).filter(
         models.QuestionModel.pcl == pcl).one()
     return str(question.answers[question.right_answer-1].answer_text)
+
+
+def get_quiz_by_own_id(db: Session, owner_id: str):
+    quizzes = db.query(models.QuizModel).filter(models.QuizModel.owner_id == owner_id).all()
+    return quizzes
