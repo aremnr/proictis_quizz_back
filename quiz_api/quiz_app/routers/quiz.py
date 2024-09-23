@@ -10,8 +10,8 @@ router = APIRouter()
 
 
 @router.post("/quiz/add", tags=["quiz"])
-def add(model: schemas.InputModel, admin: Annotated[AdminSchema, Depends(get_current_admin)], db: Session = Depends(get_db)):
-    print(admin.id)
+def add(model: schemas.InputQuiz, admin: Annotated[AdminSchema, Depends(get_current_admin)], db: Session = Depends(get_db)):
+    model = crud.model_valid(model)
     return crud.add_quiz(quiz=model.quiz, questions=model.questions, db=db, owner_id=admin.id)
 
 
@@ -58,3 +58,4 @@ def check_answer(quiz_id: str, admin: Annotated[AdminSchema, Depends(get_current
 @router.get("/temp")
 def get_all_quizzes_by_owner_id(admin: Annotated[AdminSchema, Depends(get_current_admin)], db: Session = Depends(get_db)):
     return {"quizzes": crud.get_quiz_by_own_id(db=db, owner_id=str(admin.id))}
+

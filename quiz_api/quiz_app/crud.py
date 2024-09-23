@@ -6,7 +6,6 @@ from pydantic import ValidationError
 from cache.redis_main import cache
 
 
-
 def get_quiz(db: Session, quiz_id: str):
     try:
         assert cache.check_in_cache(quiz_id=quiz_id)
@@ -97,6 +96,7 @@ def add_answer(db: Session, answer: schemas.Answer, quiz_id: str, pcl: int, admi
     else:
         return {"message": "You are not the creator of this quiz"}
 
+
 def add_quiz(db: Session, quiz: schemas.Quiz, questions: schemas.QuestionList, owner_id: str):
     quiz_db = models.QuizModel(
         name=quiz.name,
@@ -109,6 +109,7 @@ def add_quiz(db: Session, quiz: schemas.Quiz, questions: schemas.QuestionList, o
     db.flush()
     add_question_list(db, questions, quiz_db.id)
     db.commit()
+    return True
 
 
 def delete_quiz(db: Session, quiz_id: str, admin_id: str):
@@ -122,9 +123,10 @@ def delete_quiz(db: Session, quiz_id: str, admin_id: str):
     else:
         return {"message": "You are not the creator of this quiz"}
 
+
 def delete_question(db: Session, quiz_id: str, pcl: int, admin_id: str):
     if get_quiz(db=db, quiz_id=quiz_id).owner_id == str(admin_id):
-        question_id =  get_question(db=db, quiz_id=quiz_id, pcl=pcl).id
+        question_id = get_question(db=db, quiz_id=quiz_id, pcl=pcl).id
         query = (
             delete(models.QuestionModel)
             .filter(models.QuestionModel.id == question_id)
@@ -133,6 +135,7 @@ def delete_question(db: Session, quiz_id: str, pcl: int, admin_id: str):
         db.commit()
     else:
         return {"message": "You are not the creator of this quiz"}
+
 
 def delete_answer(db: Session, answer_id: str):
     query = (
@@ -154,9 +157,48 @@ def check_answer(db: Session, quiz_id: str, pcl: int, answer_plc: int):
 def get_right_answer(db: Session, quiz_id: str, pcl: int):
     question = db.query(models.QuestionModel).filter(models.QuestionModel.quiz_id == quiz_id).filter(
         models.QuestionModel.pcl == pcl).one()
-    return str(question.answers[question.right_answer-1].answer_text)
+    return str(question.answers[question.right_answer - 1].answer_text)
 
 
 def get_quiz_by_own_id(db: Session, owner_id: str):
     quizzes = db.query(models.QuizModel).filter(models.QuizModel.owner_id == owner_id).all()
     return quizzes
+
+
+def model_valid(model: schemas.InputQuiz):
+    new_quiz_model = schemas.Quiz(
+        id="",
+        name=model.title,
+        dis=model.description,
+        question_count=len(model.questions),
+        owner_id="",
+        all_points=sum([int(i.points) for i in model.questions])
+    )
+    questions = model.questions
+    for i, v in enumerate(questions):
+        for a, b in enumerate(v.answers):
+            print(i, a, b)
+    new_question_model = schemas.QuestionList(
+        list=[
+            schemas.Question(
+                id="",
+                quiz_id="",
+                question_text=v.question,
+                points=v.points,
+                right_answer=max([a for a, b in enumerate(v.answers) if b.correct == True])+1,
+                pcl=i + 1,
+                answers_list=schemas.AnswerList(
+                    list=[
+                        schemas.Answer(
+                            id='',
+                            question_id='',
+                            answer_text=i.text
+                        )
+                        for i in v.answers
+                    ]
+                )
+            )
+            for i, v in enumerate(questions)
+        ]
+    )
+    return schemas.InputModel(quiz=new_quiz_model, questions=new_question_model)

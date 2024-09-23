@@ -58,6 +58,8 @@ ws.onmessage = function(event) {
             newMessage.textContent = `${JSON.parse(message)['username']} : ${JSON.parse(message)['points']}`;
             messagesDiv.appendChild(newMessage);
         }else{
+            document.getElementById('lobby').innerText = "";
+            document.getElementById('players').innerText="";
             const data = JSON.parse(message);
             const messagesDiv = document.getElementById('messages');
             messagesDiv.innerHTML = '';

@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="{{ url_for('static', path='/style.css') }}" rel="stylesheet">
+    <link href="/static/style.css" rel="stylesheet">
     <title>WebSocket Example</title>
 </head>
 <body>
     <div class="field" style="text-align: center">
         <div style="text-align: center" id="game">
             <br>
-            <h1><b>ЛОББИ</b></h1>
+            <h1 id="lobby"><b>ЛОББИ</b></h1>
             <h5 id="players">Игроки:</h5>
             </div>
             <div id="messages" style="text-align: start">
         </div>
     </div>
-    <script src="{{ url_for('static', path='/main.js') }}"></script>
+    <script src="/static/main.js"></script>
 </body>
 </html>

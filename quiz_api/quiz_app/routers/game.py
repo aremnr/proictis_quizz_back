@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from database.database import get_db
 from admin_side.schemas import AdminSchema
 from admin_side.admin_func import get_current_admin
-from template.template_parser import get_game_html, get_admin_html
+from template.template_parser import get_game_html, get_admin_html, get_create_quiz
 from fastapi.websockets import WebSocket, WebSocketDisconnect
 from fastapi import Request
 from fastapi.exceptions import HTTPException
@@ -23,6 +23,11 @@ async def create_game(quiz_id: str, admin: Annotated[AdminSchema, Depends(get_cu
     game_id = str(uuid.uuid4())
     games[game_id] = Game(game_id = game_id, game_owner= admin.id, quiz_id=quiz_id)
     return {"game_id": game_id}
+
+
+@router.get("/create_quiz")
+def create_quiz(request: Request):
+    return get_create_quiz(request=request)
 
 
 @router.get("/game/{game_id}", tags=["game"])
@@ -44,7 +49,7 @@ async def game(websocket: WebSocket, game_id: str, db: Session = Depends(get_db)
     username: str = await websocket.receive_text()
     players = game.get_players()
     for player in players:
-        await websocket.send_json({"header" : "users", "username" : player, "points": 0})
+        await websocket.send_json({"header": "users", "username": player, "points": 0})
     try:
         admin: AdminSchema = await get_current_admin(username, db=db)
         game.add_admin(websocket=websocket, username=admin.username)
@@ -60,10 +65,9 @@ async def game(websocket: WebSocket, game_id: str, db: Session = Depends(get_db)
                 await game.manager.JSON_broadcast(json.loads(game.question.model_dump_json()))
                 game.is_started = True
             if json_data['headers']['type'] == "check_answer" and game.is_started:
-                print(1)
                 if crud.check_answer(db=db, quiz_id=game.quiz_id, pcl=game.pcl, answer_plc=json_data['index']).is_right:
                     game.add_points(websocket=websocket, points_count=game.question.points)
-                    await game.send_admins({'header': 'user_update', "username" : game.users[websocket], "points" : game.stats[game.users[websocket]]})
+                    await game.send_admins({'header': 'user_update', "username": game.users[websocket], "points": game.stats[game.users[websocket]]})
                 await websocket.send_text(f"empty_{game_id}")
             if json_data['headers']['type'] == "get_answer" and game.check_admin(websocket) and game.is_started:
                 await websocket.send_json({"header": "Answer_check", f"Answer": crud.get_right_answer(db=db, quiz_id=game.quiz_id, pcl=game.pcl)})
@@ -74,7 +78,6 @@ async def game(websocket: WebSocket, game_id: str, db: Session = Depends(get_db)
             if json_data['headers']['type'] == "end_game" and game.check_admin(websocket) and game.is_started:
                 await game.send_admins({"header": "delete"})
                 stats = dict(sorted(game.stats.items(), key=lambda item: item[1], reverse=True))
-                print(stats)
                 for username in stats.keys():
                     await game.manager.JSON_broadcast(
                         {"header": "users", "username": username, "points": game.stats[username]})

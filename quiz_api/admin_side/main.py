@@ -53,3 +53,4 @@ def create_referral(admin: Annotated[schemas.AdminSchema, Depends(admin_func.get
     ref_token = admin_func.create_referral_token()
     crud.referral(key=admin.username, text=ref_token)
     return {"referral": admin.username+ '_' + ref_token}
+

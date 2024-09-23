@@ -44,6 +44,17 @@
                     })
                     .then(response => {
                         if (response.ok) {
+                            fetch('/temp', {
+                                method: 'GET',
+                                headers: {
+                                    'Authorization': `Bearer ${token}`,
+                                    'Content-Type': 'application/json'
+                                }
+                            }).then(response => response.json())
+                                .then(response => {
+                                    localStorage.setItem('quizzes', JSON.stringify(response.quizzes));
+                                    }
+                                );
                             return response.text();
                         }
                         throw new Error('Network response was not ok.');
