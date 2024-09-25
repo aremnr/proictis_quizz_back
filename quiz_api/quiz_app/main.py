@@ -13,5 +13,5 @@ app.include_router(user.router)
 app.include_router(game.router)
 app.include_router(admin_side_router)
 app.include_router(admin_side_html.router)
-app.mount("/static", StaticFiles(directory="template/static"), name="static")
+app.mount("/", StaticFiles(directory="/opt/app/static/static"), name="static")
 
