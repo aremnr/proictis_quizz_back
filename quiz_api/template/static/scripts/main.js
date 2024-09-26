@@ -40,7 +40,7 @@ ws.onmessage = function(event) {
     if (!isJSON(message)) {
         if (message === `empty_${game_id}`){
             const Element = document.getElementById("messages");
-            Element.innerHTML = ' ';
+            Element.innerText = 'Ожидание вопроса';
         }
     }
     else{

@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from database.database import get_db
 from admin_side.schemas import AdminSchema
 from admin_side.admin_func import get_current_admin
-from template.template_parser import get_game_html, get_admin_html, get_create_quiz
+from template.template_parser import get_game_html, get_admin_html, get_create_quiz, get_create_question
 from fastapi.websockets import WebSocket, WebSocketDisconnect
 from fastapi import Request
 from fastapi.exceptions import HTTPException
@@ -23,6 +23,11 @@ async def create_game(quiz_id: str, admin: Annotated[AdminSchema, Depends(get_cu
     game_id = str(uuid.uuid4())
     games[game_id] = Game(game_id = game_id, game_owner= admin.id, quiz_id=quiz_id)
     return {"game_id": game_id}
+
+
+@router.get("/create_question")
+def create_question(request: Request):
+    return get_create_question(request=request)
 
 
 @router.get("/create_quiz")

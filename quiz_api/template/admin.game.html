@@ -1,19 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="/static/style.css" rel="stylesheet">
-    <title>WebSocket Example</title>
-</head>
-<body>
-<div class="field" >
-    <ul id = "messages">
-    </ul>
-</div>
-<div id="main">
-    <button class="answer" style="width: 400px; margin-left: 10px" id="button">Start</button>
-</div>
-<script src="/static/admin.game.js"></script>
-</body>
+    <link rel="stylesheet" href="static/css/admin.game.css">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Admin Game Side</title>
+    </head>
+    <body>
+        <div class="field" >
+            <div class="list">
+                <ul id = "messages">
+                </ul>
+            </div>
+
+            <div id="main">
+                <div class="start">
+                    <button class="answer" style="width: 400px; margin-left: 10px" id="button">Start</button>
+                </div>
+            </div>
+        </div>
+        <script src="static/scripts/adminGame.js"></script>
+    </body>
 </html>

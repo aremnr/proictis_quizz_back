@@ -1,67 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+<link rel="stylesheet" href="static/css/admin_register.css">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration Form</title>
-    <script>
-        async function registerUser(event) {
-            event.preventDefault();
-
-            const form = event.target;
-            const formData = new FormData(form);
-
-            const data = {
-                username: formData.get('username'),
-                email: formData.get('email'),
-                password: formData.get('password'),
-                referral_token: formData.get('referralToken')
-            };
-
-            try {
-                const response = await fetch('/register', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-
-                });
-                console.log(JSON.stringify(data))
-                const result = await response.json();
-
-                if (result.status === 'Registration Successful') {
-                    window.location.href = '/log';
-                } else {
-                    alert('Registration failed: ' + result.message);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('An error occurred. Please try again.');
-            }
-        }
-    </script>
+    <script src="static/scripts/adminRegistration.js"></script>
 </head>
 <body>
-    <h2>Registration Form</h2>
     <form onsubmit="registerUser(event)">
-        <div>
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
+        <div class="field">
+            <h2>Registration Form</h2>
+            <div class="fieldInput">
+                <label class="text" for="username">Username:</label><br>
+                <input class="inputFieald" type="text" id="username" name="username" required><br>
+                <label class="text" for="email">Email:</label><br>
+                <input class="inputFieald" type="email" id="email" name="email" required><br>
+                <label class="text" for="password">Password:</label><br>
+                <input class="inputFieald" type="password" id="password" name="password" required><br>
+                <label class="text" for="referralToken">Referral Token:</label><br>
+                <input class="inputFieald" type="text" id="referralToken" name="referralToken">
+            </div>
+            <div class="buttonPos">
+                <button class="button" type="submit">Register</button>
+            </div>
         </div>
-        <div>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-        </div>
-        <div>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-        </div>
-        <div>
-            <label for="referralToken">Referral Token:</label>
-            <input type="text" id="referralToken" name="referralToken">
-        </div>
-        <button type="submit">Register</button>
     </form>
 </body>
 </html>

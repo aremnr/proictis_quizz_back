@@ -1,0 +1,35 @@
+body{
+    background-image: url('../img/background.jpg');
+}
+.answer{
+    border-radius: 60px;
+    width: 650px;
+    height: 70px;
+    background: linear-gradient(45deg,#9213A7,#FD378A);
+    border: solid black 0px;
+    font-size: 30px;
+    color: white;
+}
+.start{
+    text-align: center;
+}
+.field{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    background-color: #F9F6F6;
+    border-radius: 80px;
+    padding-right: 300px;
+    padding-left: 300px;
+    padding-top: 70px;
+    padding-bottom: 70px;
+}
+
+ul{
+    list-style-type: none;
+}
+.listElements{
+    font-size: 25px;
+}

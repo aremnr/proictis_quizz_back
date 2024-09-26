@@ -36,3 +36,8 @@ def get_profile_html(request: Request):
 def get_create_quiz(request: Request):
     html_data = templates.TemplateResponse(request=request, name="create_quiz.html", context={})
     return html_data
+
+
+def get_create_question(request: Request):
+    html_data = templates.TemplateResponse(request=request, name="addQuestion.html", context={})
+    return html_data

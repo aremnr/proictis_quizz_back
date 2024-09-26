@@ -1,230 +1,24 @@
 <!DOCTYPE html>
 <html lang="ru">
+<link rel="stylesheet" href="static/css/create_quiz.css">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Создание Квиза</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f4f8;
-            margin: 0;
-            padding: 0;
-        }
-
-        .quiz-container {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            text-align: center;
-            color: #333333;
-        }
-
-        label {
-            font-weight: bold;
-            margin-bottom: 5px;
-            display: block;
-        }
-
-        input[type="text"],
-        input[type="number"],
-        textarea {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
-
-        textarea {
-            resize: vertical;
-        }
-
-        .question-container {
-            margin-bottom: 20px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-        }
-
-        .answer-container {
-            margin-top: 10px;
-        }
-
-        button {
-            display: inline-block;
-            background-color: #28a745;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-bottom: 10px;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #218838;
-        }
-
-        .add-btn {
-            background-color: #007bff;
-        }
-
-        .add-btn:hover {
-            background-color: #0069d9;
-        }
-
-        button:focus {
-            outline: none;
-        }
-    </style>
+    
 </head>
 <body>
-
-<div class="quiz-container">
+<div class="field">
     <h1>Создать Квиз</h1>
-
-    <div>
-        <label for="quiz-title">Название Квиза:</label>
-        <input type="text" id="quiz-title" placeholder="Введите название квиза">
+    <div class="fieldInput">
+        <label class="text" for="quiz-title">Название Квиза:</label><br>
+        <input class="TextField" type="text" id="quiz-title" placeholder="Введите название квиза"><br>
+        <label class="text" for="quiz-description">Описание Квиза:</label><br>
+        <textarea class="AreaField" id="quiz-description" rows="3" placeholder="Введите описание квиза"></textarea><br>
+        <button type="button" class="add-btn" onclick="setLocalParams(); window.location.href='/create_question'">Добавить Вопрос</button><br>
     </div>
-
-    <div>
-        <label for="quiz-description">Описание Квиза:</label>
-        <textarea id="quiz-description" rows="3" placeholder="Введите описание квиза"></textarea>
-    </div>
-
-    <button type="button" class="add-btn" onclick="addQuestion()">Добавить Вопрос</button>
-
-    <form id="quiz-form">
-        <!-- Вопросы будут добавляться сюда -->
-    </form>
-
-    <button type="button" onclick="submitQuiz()">Отправить Квиз</button>
 
 </div>
-
-<script>
-    let questionCount = 0;
-
-    function addQuestion() {
-        questionCount++;
-
-        const questionContainer = document.createElement('div');
-        questionContainer.className = 'question-container';
-        questionContainer.id = `question-container-${questionCount}`;
-
-        const questionHTML = `
-            <div>
-                <label for="question-${questionCount}">Вопрос ${questionCount}:</label>
-                <input type="text" id="question-${questionCount}" placeholder="Введите вопрос">
-            </div>
-            <div>
-                <label for="points-${questionCount}">Баллы за вопрос:</label>
-                <input type="number" id="points-${questionCount}" value="0" min="0">
-            </div>
-            <button type="button" class="add-btn" onclick="addAnswer(${questionCount})">Добавить Ответ</button>
-            <div id="answers-${questionCount}" class="answer-container">
-                <!-- Ответы будут добавляться сюда -->
-            </div>
-        `;
-
-        questionContainer.innerHTML = questionHTML;
-        document.getElementById('quiz-form').appendChild(questionContainer);
-    }
-
-    function addAnswer(questionId) {
-        const answerContainer = document.createElement('div');
-        const answerElements = document.querySelectorAll(`#answers-${questionId} div`);
-        const answerCount = answerElements.length;
-
-        const answerInputId = `answer-${questionId}-${answerCount}`;
-        const answerLabelId = `answer-label-${questionId}-${answerCount}`;
-        const correctId = `correct-${questionId}-${answerCount}`;
-
-        answerContainer.innerHTML = `
-            <div>
-                <label for="${answerInputId}">Ответ ${((answerCount / 2) | 0) +1}:</label>
-                <input type="text" id="${answerInputId}" placeholder="Введите ответ">
-                <label>
-                    <input type="radio" name="correct-${questionId}" id="${correctId}"> Правильный
-                </label>
-            </div>
-        `;
-
-        document.getElementById(`answers-${questionId}`).appendChild(answerContainer);
-    }
-
-    function submitQuiz() {
-        const quizTitle = document.getElementById('quiz-title').value;
-        const quizDescription = document.getElementById('quiz-description').value;
-
-        const questions = [];
-
-        for (let i = 1; i <= questionCount; i++) {
-            const questionText = document.getElementById(`question-${i}`)?.value || '';
-            const points = parseInt(document.getElementById(`points-${i}`)?.value) || 0;
-
-            const answers = [];
-            const answerElements = document.querySelectorAll(`#answers-${i} div`);
-
-            answerElements.forEach((answerEl, index) => {
-                const answerText = document.getElementById(`answer-${i}-${index}`)?.value || '';
-                const isCorrect = document.getElementById(`correct-${i}-${index}`)?.checked || false;
-                if (answerText!==""){
-                    answers.push({ text: answerText, correct: isCorrect });
-                }
-            });
-
-            questions.push({
-                question: questionText,
-                points: points,
-                answers: answers
-            });
-        }
-
-        const quizData = {
-            title: quizTitle,
-            description: quizDescription,
-            questions: questions
-        };
-
-        try {
-            const token = localStorage.getItem('authToken');
-            console.log(JSON.stringify(quizData))
-            fetch('quiz/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(quizData)
-
-            }).then(response => {
-                if (response.ok){
-                    alert('Квиз успешно добавлен. Обновите страницу.');
-                }
-            });
-
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Ошибка валидации.');
-        }
-
-    }
-</script>
-
+<script src="static/scripts/addQuiz.js"></script>
 </body>
 </html>
