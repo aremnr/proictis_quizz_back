@@ -1,6 +1,6 @@
 from sqlalchemy import ForeignKey, UUID, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from .database import Base
+from database.database import Base
 import datetime
 import uuid
 
@@ -38,3 +38,4 @@ class AnswerModel(Base):
     question_id: Mapped[str] = mapped_column(UUID, ForeignKey("questions.id", ondelete="CASCADE"))
     answer_text: Mapped[str]
     question = relationship("QuestionModel", back_populates="answers")
+

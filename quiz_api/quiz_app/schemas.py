@@ -41,7 +41,24 @@ class Quiz(BaseModel):
     owner_id: str
     all_points: int
     
-    
+
+class InputAnswer(BaseModel):
+    text: str | None
+    correct: bool | None
+
+
+class InputQuestion(BaseModel):
+    question: str | None
+    points: int | None
+    answers: list[InputAnswer]
+
+
+class InputQuiz(BaseModel):
+    title: str | None
+    description: str | None
+    questions: list[InputQuestion]
+
+
 class InputModel(BaseModel):
     quiz: Quiz
     questions: QuestionList

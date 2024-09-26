@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="static/css/profile.css">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Profile</title>
+    <script type="module" src="static/scripts/QRCreator.js"></script>
+</head>
+<body>
+    <div class="field">
+        <h1>Здравствуйте!</h1>
+        <h5>Что хотите сделать?</h5>
+        <div class="buttonField">
+            <button id="create-referral-btn" class="button">Создать реферальную ссылку</button>
+            <div id="referral-result" class="result hidden"></div>
+        </div>
+        <div class="buttonField">
+            <button id="create-game-btn" class="button">Создать игру</button>
+        </div>
+
+        <div id="game-form" class="hidden">
+            <input type="text" class="inputFieald" id="quiz-id-input" placeholder="Enter Quiz ID">
+            <button id="submit-game-btn" class="button">Submit</button>
+        </div>
+        <div id="game-result" class="result hidden">
+            <button class="hidden button" id="go-to-admin-page-btn">Go to Game</button>
+            <div class="hidden" id="qrcode"></div>
+        </div>
+
+        <div id = "quizzes">
+
+        </div>
+        <div class="buttonField">
+            <button id="GoTOCreate" class="button">
+                Создать Квиз
+            </button>
+        </div>
+    </div>
+    <script src="static/scripts/adminProfile.js"></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ru">
+<link rel="stylesheet" href="static/css/create_quiz.css">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создание Квиза</title>
+    
+</head>
+<body>
+<div class="field">
+    <h1>Создать Квиз</h1>
+    <div class="fieldInput">
+        <label class="text" for="quiz-title">Название Квиза:</label><br>
+        <input class="TextField" type="text" id="quiz-title" placeholder="Введите название квиза"><br>
+        <label class="text" for="quiz-description">Описание Квиза:</label><br>
+        <textarea class="AreaField" id="quiz-description" rows="3" placeholder="Введите описание квиза"></textarea><br>
+        <button type="button" class="add-btn" onclick="setLocalParams(); window.location.href='/create_question'">Добавить Вопрос</button><br>
+    </div>
+
+</div>
+<script src="static/scripts/addQuiz.js"></script>
+</body>
+</html>

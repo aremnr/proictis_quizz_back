@@ -1,64 +1,17 @@
-from database.database import SessionLocal
-from sqlalchemy.orm import Session
-from fastapi import Depends, FastAPI
-import quiz_app.crud as crud
-import quiz_app.schemas as schemas
-
-
-def get_db():
-    db = SessionLocal()
-    try:
-        db.expire_all()
-        yield db
-    finally:
-        db.close()
-
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from quiz_app.routers import quiz, game, user, admin_side_html
+from admin_side.main import router as admin_side_router
 
 app = FastAPI(
-    title="test"
+    title="test",
+
 )
 
+app.include_router(quiz.router)
+app.include_router(user.router)
+app.include_router(game.router)
+app.include_router(admin_side_router)
+app.include_router(admin_side_html.router)
+app.mount("/static", StaticFiles(directory="template/static"), name="static")
 
-@app.post("/quiz/add")
-def add(model: schemas.InputModel, db: Session = Depends(get_db)):
-    return crud.add_quiz(quiz=model.quiz, questions=model.questions, db=db)
-
-
-@app.post("/quiz/{quiz_id}/add/question")
-def add_question(model: schemas.Question, quiz_id: str, db: Session = Depends(get_db)):
-    return crud.add_question(db=db, question=model, quiz_id=quiz_id)
-
-
-@app.post("/quiz/{quiz_id}/{question_id}/add")
-def add_answer(quiz_id: str, question_id: str, model: schemas.Answer, db: Session = Depends(get_db)):
-    return crud.add_answer(db=db, answer=model, question_id=question_id)
-
-
-@app.get("/quiz/{quiz_id}", response_model=schemas.Quiz)
-def get_quiz_by_id(quiz_id: str, db: Session = Depends(get_db)):
-    return crud.get_quiz(db=db, quiz_id=quiz_id)
-
-
-@app.get("/quiz/{quiz_id}/question", response_model=schemas.Question)
-def get_question_of_quiz(quiz_id: str, question_number: int = 0, db: Session = Depends(get_db)):
-    return crud.get_question(db=db, quiz_id=quiz_id, pcl=question_number)
-
-
-@app.delete("/quiz/del/quiz/{quiz_id}", status_code=200)
-def delete_quiz(*, quiz_id: str, db: Session = Depends(get_db)):
-    return crud.delete_quiz(quiz_id=quiz_id, db=db)
-
-
-@app.delete("/quiz/del/question/{question_id}", status_code=200)
-def delete_question(*, question_id: str, db: Session = Depends(get_db)):
-    return crud.delete_question(question_id=question_id, db=db)
-
-
-@app.delete("/quiz/del/answer/{answer_id}", status_code=200)
-def delete_answer(*, answer_id: str, db: Session = Depends(get_db)):
-    return crud.delete_answer(answer_id=answer_id, db=db)
-
-
-@app.post("/quiz/{quiz_id}/ans_check", response_model=schemas.Check)
-def check_answer(quiz_id: str, *, question_number: int = 1, answer_number: int = 0, db: Session = Depends(get_db)):
-    return crud.check_answer(db, quiz_id, question_number, answer_number)
