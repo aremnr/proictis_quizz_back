@@ -2,6 +2,7 @@ quiz_div = document.getElementById("quizzes")
 quizzes = JSON.parse(localStorage.getItem('quizzes'))
 for (let i = 0; i < quizzes.length; i++) {
     quiz_id_button = document.createElement("button")
+    quiz_id_button.setAttribute('class', 'hidden-button')
     quiz_id_button.setAttribute('onclick', 'copyText(this)')
     quiz_id_button.id = `${quizzes[i].id}`
     quiz_id_button.textContent = `${quizzes[i].name}`

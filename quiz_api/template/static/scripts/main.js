@@ -4,7 +4,7 @@ const game_id = segments.pop() || segments.pop();
 const urlParams = new URLSearchParams(window.location.search);
 const username = urlParams.get('username');
 
-const ws = new WebSocket(`ws://${window.location.host}/game/${game_id}`)
+const ws = new WebSocket(`wss://${window.location.host}/game/${game_id}`)
 ws.onopen = function(event) {
     console.log('WebSocket is open now.');
     ws.send(username)
