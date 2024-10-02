@@ -58,6 +58,9 @@ async def get_current_admin(token: Annotated[str, Depends(oauth2_scheme)], db: S
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("name")
+        exp_time = datetime.strptime(payload.get("expire")[:-6], "%Y-%m-%d %H:%M:%S.%f")
+        if datetime.utcnow() > exp_time:
+            raise credentials_exception
         if username is None:
             raise credentials_exception
         token_data = schemas.TokenData(username=username)

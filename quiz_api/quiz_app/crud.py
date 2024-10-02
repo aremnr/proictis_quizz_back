@@ -166,6 +166,7 @@ def get_quiz_by_own_id(db: Session, owner_id: str):
 
 
 def model_valid(model: schemas.InputQuiz):
+    print(model.questions, len(model.questions))
     new_quiz_model = schemas.Quiz(
         id="",
         name=model.title,
@@ -175,9 +176,6 @@ def model_valid(model: schemas.InputQuiz):
         all_points=sum([int(i.points) for i in model.questions])
     )
     questions = model.questions
-    for i, v in enumerate(questions):
-        for a, b in enumerate(v.answers):
-            print(i, a, b)
     new_question_model = schemas.QuestionList(
         list=[
             schemas.Question(

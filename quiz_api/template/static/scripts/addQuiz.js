@@ -13,6 +13,7 @@ function setLocalParams() {
 }
 
 function addQuestion() {
+
     questionCount++;
 
     const questionContainer = document.createElement('div');
@@ -34,7 +35,7 @@ function addQuestion() {
             </div>
             <button type="button" class="add-btn" onclick="saveQuestionResult(); location.reload()">Добавить Вопрос</button><br>
             <div>
-                <button class="add-btn" type="button" onclick="submitQuiz()">Отправить Квиз</button>
+                <button class="add-btn" type="button" onclick="submitQuiz()">Создать Квиз</button>
             </div>
         </div>
 
@@ -92,6 +93,7 @@ function saveQuestionResult() {
 }
 
 function submitQuiz() {
+    saveQuestionResult();
     const quiz = JSON.parse(localStorage.getItem("Quiz"));
     questions = JSON.parse(localStorage.getItem("Questions"));
     const quizData = {
@@ -111,6 +113,10 @@ function submitQuiz() {
             body: JSON.stringify(quizData)
 
         }).then(response => {
+            if (response.status === 401){
+                alert("Срок действия вашего токена истек. ПОжайлуста, перезайдите в систему.")
+                window.location.href = "/log"
+            }
             if (response.ok){
                 alert("Успех!!!!!!!")
                 window.location.href = "/log";
@@ -121,5 +127,5 @@ function submitQuiz() {
         console.error('Error:', error);
         alert('Ошибка валидации.');
     }
-    localStorage.clear();
+    localStorage.removeItem('QuestionLength'); localStorage.removeItem("Questions"); localStorage.removeItem("Quiz")
 }

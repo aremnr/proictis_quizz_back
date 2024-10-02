@@ -7,15 +7,18 @@ from typing import Annotated
 
 router = APIRouter()
 
+
 @router.get('/log', tags=["auth"])
 async def get_log(request: Request):
     return get_admin_login_html(request)
+
 
 @router.get('/registration', tags=["auth"])
 async def get_registration(request: Request):
     return get_admin_registration_html(request)
 
+
 @router.get('/profile', tags=["auth"])
-async def get_profile(admin: Annotated[AdminSchema, Depends(get_current_admin)],request: Request):
-    print(admin.id)
+async def get_profile(request: Request):
     return get_profile_html(request)
+

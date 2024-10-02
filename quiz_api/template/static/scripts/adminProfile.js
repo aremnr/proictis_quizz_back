@@ -30,6 +30,7 @@ document.getElementById('GoTOCreate').addEventListener('click', function () {
     window.location.href = "/create_quiz";
 })
 
+
 document.getElementById('create-referral-btn').addEventListener('click', function() {
     const token = localStorage.getItem('authToken');
     fetch('/create_referral', {
@@ -39,13 +40,22 @@ document.getElementById('create-referral-btn').addEventListener('click', functio
             'Content-Type': 'application/json'
         }
     })
-    .then(response => response.json())
+    .then(response => {
+            if (response.status === 401){
+                alert("Истек срок действия токена. Перезайдите в систему, пожалуйста.")
+                window.location.href= "/log"
+            }
+            if (response.ok){
+                return response.json()
+            }
+        }
+    )
     .then(data => {
         const referralResult = document.getElementById('referral-result');
         referralResult.textContent = `Referral: ${data.referral}`;
         referralResult.classList.remove('hidden');
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => console.error('Error:', error.message));
 });
 
 document.getElementById('create-game-btn').addEventListener('click', function() {
@@ -63,7 +73,15 @@ document.getElementById('submit-game-btn').addEventListener('click', function() 
             'Content-Type': 'application/json'
         }
     })
-    .then(response => response.json())
+    .then(response => {
+        if (response.status === 401){
+            alert("Истек срок действия токена. Перезайдите в систему, пожалуйста.")
+            window.location.href="/log"
+        }
+        if (response.ok){
+            return response.json()
+        }
+    })
     .then(data => {
         const gameResult = document.getElementById('game-result');
         const gameButton = document.getElementById("go-to-admin-page-btn");
@@ -88,6 +106,10 @@ document.getElementById('go-to-admin-page-btn').addEventListener('click', functi
                 }
             })
             .then(response => {
+                if (response.status === 401){
+                    alert("Истек срок действия токена. Перезайдите в систему, пожалуйста.")
+                    window.location.href="/log"
+                }
                 if (response.ok) {
                     return response.text();
                 }

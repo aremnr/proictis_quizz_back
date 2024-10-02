@@ -1,3 +1,24 @@
+token = localStorage.getItem("authToken")
+
+fetch('/get_quizzes', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => {
+                if (response.ok){
+                    window.location.href='/profile'
+                }
+                return response.json()
+            })
+            .then(response => {
+                localStorage.setItem('quizzes', JSON.stringify(response.quizzes));
+                }
+            );
+
+
+
 async function loginUser(event) {
     event.preventDefault();
 
@@ -28,39 +49,19 @@ async function loginUser(event) {
             const token = `${accessToken}`;
 
             localStorage.setItem('authToken', token);
-
-            fetch('/profile', {
+            fetch('/get_quizzes', {
                 method: 'GET',
                 headers: {
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
                 }
-            })
+            }).then(response => response.json())
             .then(response => {
-                if (response.ok) {
-                    fetch('/temp', {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        }
-                    }).then(response => response.json())
-                        .then(response => {
-                            localStorage.setItem('quizzes', JSON.stringify(response.quizzes));
-                            }
-                        );
-                    return response.text();
+                localStorage.setItem('quizzes', JSON.stringify(response.quizzes));
                 }
-                throw new Error('Network response was not ok.');
-            })
-            .then(html => {
-                document.open();
-                document.write(html);
-                document.close();
-            })
-            .catch(error => {
-                console.error('Fetch operation failed: ', error);
-            });
-
+            );
+            alert("Успешная Авторизация")
+            window.location.href = "/profile"
         } else {
             alert('Login failed: ' + result.message);
         }

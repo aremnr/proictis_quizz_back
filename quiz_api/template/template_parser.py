@@ -41,3 +41,4 @@ def get_create_quiz(request: Request):
 def get_create_question(request: Request):
     html_data = templates.TemplateResponse(request=request, name="addQuestion.html", context={})
     return html_data
+
