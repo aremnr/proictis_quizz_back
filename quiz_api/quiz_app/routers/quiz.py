@@ -55,7 +55,7 @@ def check_answer(quiz_id: str, admin: Annotated[AdminSchema, Depends(get_current
     return crud.check_answer(db=db, quiz_id=quiz_id, pcl=question_number, answer_plc=answer_number)
 
 
-@router.get("/temp")
+@router.get("/get_quizzes")
 def get_all_quizzes_by_owner_id(admin: Annotated[AdminSchema, Depends(get_current_admin)], db: Session = Depends(get_db)):
     return {"quizzes": crud.get_quiz_by_own_id(db=db, owner_id=str(admin.id))}
 

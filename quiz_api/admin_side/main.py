@@ -32,6 +32,7 @@ async def login_for_access_token(
     )
     return schemas.Token(access_token=access_token, token_type="bearer")
 
+
 @router.post("/register", tags=["auth"])
 async def register_admin(
         admin: schemas.RegistrationSchema,
@@ -48,8 +49,10 @@ async def register_admin(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
+
 @router.post("/create_referral", tags=["auth"])
 def create_referral(admin: Annotated[schemas.AdminSchema, Depends(admin_func.get_current_admin)]):
+    print(admin.id)
     ref_token = admin_func.create_referral_token()
     crud.referral(key=admin.username, text=ref_token)
     return {"referral": admin.username+ '_' + ref_token}
