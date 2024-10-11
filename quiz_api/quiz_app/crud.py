@@ -109,7 +109,7 @@ def add_quiz(db: Session, quiz: schemas.Quiz, questions: schemas.QuestionList, o
     db.flush()
     add_question_list(db, questions, quiz_db.id)
     db.commit()
-    return True
+    return quiz_db.id
 
 
 def delete_quiz(db: Session, quiz_id: str, admin_id: str):

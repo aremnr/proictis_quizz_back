@@ -1,3 +1,5 @@
+import uuid
+
 from pydantic import EmailStr
 from sqlalchemy.orm import Session
 import admin_side.models as models
@@ -24,10 +26,10 @@ def referral(key: str, text: str):
 def check_referral(token: str):
     received_token = cache.check_cache(key=token.split('_')[0])
     #return received_token == token.split('_')[1]
-    return received_token if not(received_token) else received_token == token.split('_')[1]
+    return received_token if not received_token else received_token == token.split('_')[1]
 
 def add_admin(db: Session, username: str | None = None, email: EmailStr | None = None, password: str | None = None):
-    admin_db = models.AdminModel(username=username, email=str(email), password=password)
+    admin_db = models.AdminModel(id=uuid.uuid4(), username=username, email=str(email), password=password)
     db.add(admin_db)
     db.flush()
     db.commit()
