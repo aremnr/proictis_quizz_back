@@ -40,7 +40,15 @@ ws.onmessage = function(event) {
     if (!isJSON(message)) {
         if (message === `empty_${game_id}`){
             const Element = document.getElementById("messages");
-            Element.innerText = '';
+            Element.innerText = 'Ожидание след вопроса';
+        }
+        if (message === 'end_game'){
+            const Element = document.getElementById("messages");
+            Element.innerText = 'Ожидание результатов';
+        }
+        if (message === 'results'){
+            const Element = document.getElementById("messages");
+            Element.innerText = 'Результаты';
         }
     }
     else{

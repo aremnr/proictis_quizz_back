@@ -12,6 +12,7 @@ router = APIRouter()
 @router.post("/quiz/add", tags=["quiz"])
 def add(model: schemas.InputQuiz, admin: Annotated[AdminSchema, Depends(get_current_admin)], db: Session = Depends(get_db)):
     model = crud.model_valid(model)
+    print(model.questions.list, model.quiz.timer)
     return crud.add_quiz(quiz=model.quiz, questions=model.questions, db=db, owner_id=admin.id)
 
 

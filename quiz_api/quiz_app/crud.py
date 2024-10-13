@@ -103,9 +103,11 @@ def add_quiz(db: Session, quiz: schemas.Quiz, questions: schemas.QuestionList, o
         dis=quiz.dis,
         owner_id=owner_id,
         question_count=quiz.question_count,
+        timer=quiz.timer,
         all_points=quiz.all_points
     )
     db.add(quiz_db)
+    print("/n/n/n/n/n/n/n/n/n/n/n/n/n")
     db.flush()
     add_question_list(db, questions, quiz_db.id)
     db.commit()
@@ -166,13 +168,13 @@ def get_quiz_by_own_id(db: Session, owner_id: str):
 
 
 def model_valid(model: schemas.InputQuiz):
-    print(model.questions, len(model.questions))
     new_quiz_model = schemas.Quiz(
         id="",
         name=model.title,
         dis=model.description,
         question_count=len(model.questions),
         owner_id="",
+        timer=model.timer if model.timer >= 0 else 0,
         all_points=sum([int(i.points) for i in model.questions])
     )
     questions = model.questions

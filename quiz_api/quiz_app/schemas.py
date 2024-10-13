@@ -39,6 +39,7 @@ class Quiz(BaseModel):
     dis: str | None
     question_count: int
     owner_id: str
+    timer: int
     all_points: int
     
 
@@ -56,6 +57,7 @@ class InputQuestion(BaseModel):
 class InputQuiz(BaseModel):
     title: str | None
     description: str | None
+    timer: int
     questions: list[InputQuestion]
 
 

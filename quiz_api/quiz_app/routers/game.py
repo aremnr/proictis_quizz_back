@@ -48,7 +48,6 @@ async def get_admin_game(game_id: str, admin: Annotated[AdminSchema, Depends(get
 @router.websocket('/game/{game_id}')
 async def game(websocket: WebSocket, game_id: str, db: Session = Depends(get_db)):
 
-
     game = games[game_id]
     await game.manager.connect(websocket)
     username: str = await websocket.receive_text()
@@ -73,15 +72,22 @@ async def game(websocket: WebSocket, game_id: str, db: Session = Depends(get_db)
                 if crud.check_answer(db=db, quiz_id=game.quiz_id, pcl=game.pcl, answer_plc=json_data['index']).is_right:
                     game.add_points(websocket=websocket, points_count=game.question.points)
                     await game.send_admins({'header': 'user_update', "username": game.users[websocket], "points": game.stats[game.users[websocket]]})
-                await websocket.send_text(f"empty_{game_id}")
+                if crud.get_quiz(db=db, quiz_id=game.quiz_id).question_count == game.pcl:
+                    await websocket.send_text(f"end_game")
+                else:
+                    await game.manager.broadcast(f"empty_{game_id}")
             if json_data['headers']['type'] == "get_answer" and game.check_admin(websocket) and game.is_started:
                 await websocket.send_json({"header": "Answer_check", f"Answer": crud.get_right_answer(db=db, quiz_id=game.quiz_id, pcl=game.pcl)})
-                await game.manager.broadcast(f"empty_{game_id}")
+                #await game.manager.broadcast(f"empty_{game_id}")
                 game.pcl += 1
                 if crud.get_quiz(db=db, quiz_id=game.quiz_id).question_count < game.pcl:
                     await game.send_admins({'header': 'end_game'})
+                    await websocket.send_text(f"end_game")
+                else:
+                    await game.manager.broadcast(f"empty_{game_id}")
             if json_data['headers']['type'] == "end_game" and game.check_admin(websocket) and game.is_started:
                 await game.send_admins({"header": "delete"})
+                await websocket.send_text(f"results")
                 stats = dict(sorted(game.stats.items(), key=lambda item: item[1], reverse=True))
                 for username in stats.keys():
                     await game.manager.JSON_broadcast(

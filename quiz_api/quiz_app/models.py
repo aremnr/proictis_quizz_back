@@ -14,6 +14,7 @@ class QuizModel(Base):
     owner_id: Mapped[str] = mapped_column(nullable=False)
     question_count: Mapped[int] = mapped_column(nullable=False)
     all_points: Mapped[int]
+    timer: Mapped[int]
     create_at: Mapped[datetime.datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"))
     questions_list = relationship("QuestionModel", back_populates="quiz")
     
