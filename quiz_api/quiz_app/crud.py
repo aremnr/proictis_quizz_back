@@ -159,7 +159,7 @@ def check_answer(db: Session, quiz_id: str, pcl: int, answer_plc: int):
 def get_right_answer(db: Session, quiz_id: str, pcl: int):
     question = db.query(models.QuestionModel).filter(models.QuestionModel.quiz_id == quiz_id).filter(
         models.QuestionModel.pcl == pcl).one()
-    return str(question.answers[question.right_answer - 1].answer_text)
+    return [str(question.answers[question.right_answer - 1].answer_text), question.right_answer-1]
 
 
 def get_quiz_by_own_id(db: Session, owner_id: str):

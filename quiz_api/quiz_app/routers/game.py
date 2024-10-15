@@ -77,7 +77,8 @@ async def game(websocket: WebSocket, game_id: str, db: Session = Depends(get_db)
                 else:
                     await game.manager.broadcast(f"empty_{game_id}")
             if json_data['headers']['type'] == "get_answer" and game.check_admin(websocket) and game.is_started:
-                await websocket.send_json({"header": "Answer_check", f"Answer": crud.get_right_answer(db=db, quiz_id=game.quiz_id, pcl=game.pcl)})
+                await websocket.send_json({"header": "Answer_check", f"Answer": crud.get_right_answer(db=db, quiz_id=game.quiz_id, pcl=game.pcl)[0]})
+                await game.manager.broadcast(f"{crud.get_right_answer(db=db, quiz_id=game.quiz_id, pcl=game.pcl)[1]}")
                 #await game.manager.broadcast(f"empty_{game_id}")
                 game.pcl += 1
                 if crud.get_quiz(db=db, quiz_id=game.quiz_id).question_count < game.pcl:
