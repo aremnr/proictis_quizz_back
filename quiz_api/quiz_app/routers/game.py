@@ -18,7 +18,7 @@ router = APIRouter()
 games: dict[str, Game] = {}
 
 
-@router.get("/create_game", tags=["game"])
+@router.get("/create_game", tags=["game"], status_code=201)
 async def create_game(quiz_id: str, admin: Annotated[AdminSchema, Depends(get_current_admin)]):
     game_id = str(uuid.uuid4())
     games[game_id] = Game(game_id = game_id, game_owner= admin.id, quiz_id=quiz_id)

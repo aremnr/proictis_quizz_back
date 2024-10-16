@@ -14,7 +14,7 @@ import admin_side.admin_func as admin_func
 router = APIRouter()
 
 
-@router.post("/login", tags=["auth"])
+@router.post("/login", tags=["auth"], status_code=200)
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     db: Session = Depends(get_db)
@@ -33,7 +33,7 @@ async def login_for_access_token(
     return schemas.Token(access_token=access_token, token_type="bearer")
 
 
-@router.post("/register", tags=["auth"])
+@router.post("/register", tags=["auth"], status_code=301)
 async def register_admin(
         admin: schemas.RegistrationSchema,
         db: Session = Depends(get_db),
@@ -50,7 +50,7 @@ async def register_admin(
         )
 
 
-@router.post("/create_referral", tags=["auth"])
+@router.post("/create_referral", tags=["auth"], status_code=201)
 def create_referral(admin: Annotated[schemas.AdminSchema, Depends(admin_func.get_current_admin)]):
     print(admin.id)
     ref_token = admin_func.create_referral_token()
