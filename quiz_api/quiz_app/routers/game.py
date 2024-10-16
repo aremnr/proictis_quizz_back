@@ -83,16 +83,17 @@ async def game(websocket: WebSocket, game_id: str, db: Session = Depends(get_db)
                 game.pcl += 1
                 if crud.get_quiz(db=db, quiz_id=game.quiz_id).question_count < game.pcl:
                     await game.send_admins({'header': 'end_game'})
-                    await websocket.send_text(f"end_game")
+                    await game.manager.broadcast("end_game")
                 else:
                     await game.manager.broadcast(f"empty_{game_id}")
             if json_data['headers']['type'] == "end_game" and game.check_admin(websocket) and game.is_started:
                 await game.send_admins({"header": "delete"})
-                await websocket.send_text(f"results")
+                await game.manager.broadcast("start_results")
                 stats = dict(sorted(game.stats.items(), key=lambda item: item[1], reverse=True))
                 for username in stats.keys():
                     await game.manager.JSON_broadcast(
                         {"header": "users", "username": username, "points": game.stats[username]})
+                await game.manager.broadcast("end_results")
             else:
                 pass
     except WebSocketDisconnect:
